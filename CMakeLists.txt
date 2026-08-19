@@ -7,4 +7,8 @@ include_directories(.)
 
 add_executable(guidance_sim_cpp
         main.cpp
-        main.h)
+        main.h
+        maths.cpp
+)
+
+
