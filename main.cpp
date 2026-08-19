@@ -7,18 +7,20 @@
 #include <cmath>
 
 
-double coord_angle(const State &mstate, const State &tstate) {
-    double vm {std::hypot(mstate.xd, mstate.yd)};
-    double vt {std::hypot(tstate.xd, tstate.yd)};
-    double lambda { std::atan(mstate.y / mstate.x) };
-    double beta { std::atan(tstate.y / tstate.x) };
+void coord_rotation(State &mstate, State &tstate) {
+    double vm {hypot(mstate.vel)};
+    double vt {hypot(tstate.vel)};
+    Vector2D r {tstate.pos - mstate.pos};
+    double lambda { std::atan(r.y / r.x) };
+    double beta { std::atan(tstate.pos.y / tstate.pos.x) };
     double lead { std:: asin((vt / vm) * std::sin(beta+lambda))};
-    return lambda + lead;
+    mstate = coord_rotation(mstate, lambda + lead);
+    tstate = coord_rotation(tstate, lambda + lead);
 }
 
 std::ostream& operator<< (std::ostream& out, State state) {
-    out << "Coordinates: (" << state.x << "," << state.y << ")" << std::endl <<
-        "Velocity: (" << state.xd << "," << state.yd << ") \n";
+    out << "Coordinates: (" << state.pos.x << "," << state.pos.y << ")" << std::endl <<
+        "Velocity: (" << state.vel.x << "," << state.vel.y << ") \n";
 
     return out;
 }
@@ -31,10 +33,7 @@ int main() {
     State target_state {1000, 1500, 360, 800};
 
     std::cout << "Initial state: \n" << missile_state;
-
-    double rotation_angle { coord_angle(missile_state, target_state)};
-    missile_state = matrixmultiply(rotationmatrix(rotation_angle), missile_state);
-
+    coord_rotation(missile_state, target_state);
     std::cout << "Final state: \n" << missile_state;
 
     return 0;

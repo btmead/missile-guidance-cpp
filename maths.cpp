@@ -5,14 +5,12 @@
 #include "main.h"
 #include <cmath>
 
-struct Vector2D;
 
-State matrixmultiply(const Matrix2D& matrix, const State& vector) {
+Vector2D matrixmultiply(const Matrix2D& matrix, const Vector2D& vector) {
     return {
         matrix.m00 * vector.x + matrix.m01 * vector.y,
         matrix.m10 * vector.x + matrix.m11 * vector.y,
-        vector.xd,
-        vector.yd
+
     };
 }
 
@@ -24,4 +22,14 @@ Matrix2D rotationmatrix(double angle) {
         cosine, sine,
         -sine, cosine
     };
+}
+
+double hypot (const Vector2D& vector) {
+    return std::hypot(vector.x, vector.y);
+}
+
+State coord_rotation(State &state, double angle) {
+    state.pos = (matrixmultiply(rotationmatrix(angle), state.pos));
+    state.vel = (matrixmultiply(rotationmatrix(angle), state.vel));
+    return state;
 }
