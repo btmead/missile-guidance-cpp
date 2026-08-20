@@ -33,3 +33,11 @@ State coord_rotation(State &state, double angle) {
     state.vel = (matrixmultiply(rotationmatrix(angle), state.vel));
     return state;
 }
+
+double Vector2D::dot(const Vector2D & vector) {
+    return x * vector.x + y * vector.y;
+}
+
+Vector2D Vector2D::scalar(const double scalar) const{
+    return {scalar * x, scalar * y};
+}

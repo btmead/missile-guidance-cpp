@@ -1,0 +1,18 @@
+title = "parameters"
+
+[parameters]
+nav_ratio = 3
+missile_vmax = 1000
+target_vmax = 700
+missile_amax = 30
+target_amax = 7
+
+[missile_state]
+x = 300
+y = 300
+theta = 30
+
+[target_state]
+x = 800
+y = 900
+theta = 46
