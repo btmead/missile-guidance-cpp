@@ -28,7 +28,7 @@ double hypot (const Vector2D& vector) {
     return std::hypot(vector.x, vector.y);
 }
 
-State coord_rotation(State &state, double angle) {
+State coord_rotation(State &state, const double angle) {
     state.pos = (matrixmultiply(rotationmatrix(angle), state.pos));
     state.vel = (matrixmultiply(rotationmatrix(angle), state.vel));
     return state;

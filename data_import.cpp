@@ -54,7 +54,7 @@ State import_state(std::string_view name, std::string_view type, const double vm
         const auto ypos =
             parameters[type]["y"].value<double>();
 
-        const auto angle =
+        auto angle =
             parameters[type]["theta"].value<double>();
         
 
@@ -63,6 +63,8 @@ State import_state(std::string_view name, std::string_view type, const double vm
                 "Parameters.toml contain missing or incorrectly typed values"
             };
         }
+
+        *angle = *angle * (3.141/180);
 
         double xvel {vmax * std::cos(*angle)};
         double yvel {vmax * std::sin(*angle)};

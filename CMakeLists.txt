@@ -20,7 +20,8 @@ add_executable(guidance_sim_cpp
         main.h
         maths.cpp
         data_import.cpp
-        derivatives.cpp
+        guidance.cpp
+        guidance.cpp
 )
 
 add_custom_command(

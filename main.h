@@ -35,8 +35,7 @@ struct State {
 
 
 struct LinearState {
-    double y    {0.0};
-    double yd   {0.0};
+    Vector2D vec;
     double t_go {1e-6};
 };
 
@@ -51,9 +50,11 @@ struct Parameters {
 
 void coord_rotation(State&, State&);
 
-State coord_rotation(State&, double);
+State coord_rotation(State&, const double);
 
 Vector2D matrixmultiply(const Matrix2D&, const Vector2D&);
+
+Vector2D v_closing (State&, State&);
 
 Matrix2D rotationmatrix(double);
 
@@ -62,6 +63,12 @@ double hypot(const Vector2D&);
 Parameters get_parameters(std::string_view);
 
 State import_state(std::string_view, std::string_view, const double);
+
+Matrix2D get_propnav (const double, const Parameters&);
+
+LinearState state_derivative (const LinearState&, const Parameters&, const double);
+
+LinearState to_linear (const State&, const State&);
 
 std::ostream& operator << (std::ostream&, State);
 
