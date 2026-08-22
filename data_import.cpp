@@ -26,12 +26,16 @@ Parameters get_parameters(std::string_view name) {
         const auto target_amax =
             parameters["parameters"]["target_amax"].value<double>();
 
+        const auto h =
+            parameters["parameters"]["h"].value<double>();
+
         return Parameters {
             nav_ratio.value(),
             missile_vmax.value(),
             target_vmax.value(),
             missile_amax.value(),
-            target_amax.value()
+            target_amax.value(),
+            h.value()
         };
     }
     catch (const toml::parse_error& error) {
@@ -64,7 +68,7 @@ State import_state(std::string_view name, std::string_view type, const double vm
             };
         }
 
-        *angle = *angle * (3.141/180);
+        *angle = *angle * (M_PI /180);
 
         double xvel {vmax * std::cos(*angle)};
         double yvel {vmax * std::sin(*angle)};

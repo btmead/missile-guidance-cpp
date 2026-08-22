@@ -4,28 +4,6 @@
 
 #include "main.h"
 #include <iostream>
-#include <cmath>
-
-
-void coord_rotation(State &mstate, State &tstate) {
-    double vm {hypot(mstate.vel)};
-    double vt {hypot(tstate.vel)};
-    Vector2D r {tstate.pos - mstate.pos};
-    double lambda { std::atan2(r.y, r.x) };
-    double beta { std::atan2(tstate.vel.y, tstate.vel.x) };
-    double lead { std:: asin((vt / vm) * std::sin(lambda - beta))};
-    mstate = coord_rotation(mstate, lambda+lead);
-    tstate = coord_rotation(tstate, lambda+lead);
-}
-
-
-LinearState state_derivative (const LinearState& state, const Parameters& params, const double t_go) {
-    Matrix2D propnav_matrix { get_propnav(t_go, params)};
-    return { matrixmultiply(propnav_matrix, state.vec) };
-}
-
-
-
 
 Vector2D r (State &mstate, State &tstate) {
     return { tstate.pos - mstate.pos};
@@ -44,23 +22,27 @@ std::ostream &operator<<(std::ostream &out, Matrix2D matrix) {
     return out;
 }
 
+std::ostream& operator<< (std::ostream &out, LinearState state) {
+    out << "(" << state.vec.x << ", " << state.vec.y << ")" << std::endl << "Time: " << state.t_go << std::endl;
+    return out;
+}
+
 
 int main() {
-    double t {0.0};
     Parameters params {get_parameters("parameters.toml")};
     State missile_state { import_state("parameters.toml", "missile_state", params.missile_vmax) };
     State target_state { import_state("parameters.toml", "target_state", params.target_vmax) };
     coord_rotation(missile_state, target_state);
 
-    double t_final {
-        hypot(r(missile_state, target_state)) /
-            hypot(v_closing(missile_state, target_state))
-    };
-    double t_go {t_final - t};
+    try {
+        double t_final { 1 / v_closing(missile_state, target_state) };
+        linear_guidance (missile_state, target_state, params, t_final);
+        return 0;
+    }
 
-    LinearState state { to_linear( missile_state, target_state ) };
-    state = state_derivative( state, params, t_go );
+    catch (const std::invalid_argument& err) {
+        std::cerr << err.what() << std::endl;
+    }
 
-    return 0;
 }
 
