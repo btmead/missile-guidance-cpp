@@ -1,5 +1,8 @@
 title = "parameters"
 
+[metadata]
+parameter_ID = "P001 R02"
+
 [parameters]
 nav_ratio = 3
 missile_vmax = 1000
@@ -14,6 +17,6 @@ y = 300
 theta = 30
 
 [target_state]
-x = 800
-y = 900
+x = 8000
+y = 4000
 theta = 46

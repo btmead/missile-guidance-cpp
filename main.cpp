@@ -3,27 +3,19 @@
 //
 
 #include "main.h"
+#include "data.h"
+#include "variable_types.h"
 #include <iostream>
+#include <Eigen/Dense>
 
-Vector2D r (State &mstate, State &tstate) {
-    return { tstate.pos - mstate.pos};
+Eigen::Vector2d r (const State &mstate, const State &tstate) {
+    return tstate.pos - mstate.pos;
 }
 
 
 std::ostream& operator<< (std::ostream& out, State state) {
-    out << "Coordinates: (" << state.pos.x << "," << state.pos.y << ")" << std::endl <<
-        "Velocity: (" << state.vel.x << "," << state.vel.y << ") \n";
-    return out;
-}
-
-std::ostream &operator<<(std::ostream &out, Matrix2D matrix) {
-    out << "| " << matrix.m00 << " " << matrix.m01 << " |\n| " <<
-        matrix.m10 << " " << matrix.m11 << " |" << std::endl;
-    return out;
-}
-
-std::ostream& operator<< (std::ostream &out, LinearState state) {
-    out << "(" << state.vec.x << ", " << state.vec.y << ")" << std::endl << "Time: " << state.t_go << std::endl;
+    out << "Coordinates: (" << state.pos.x() << "," << state.pos.y() << ")" << std::endl <<
+        "Velocity: (" << state.vel.x() << "," << state.vel.y() << ") \n";
     return out;
 }
 
@@ -36,7 +28,8 @@ int main() {
 
     try {
         double t_final { 1 / v_closing(missile_state, target_state) };
-        linear_guidance (missile_state, target_state, params, t_final);
+        std::vector<Result_Sample> results { linear_guidance (missile_state, target_state, params, t_final) };
+        write_data(results);
         return 0;
     }
 

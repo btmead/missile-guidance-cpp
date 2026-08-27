@@ -12,7 +12,21 @@ FetchContent_Declare(
         GIT_TAG v3.4.0
 )
 
+FetchContent_Declare(
+        Eigen3
+        GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
+)
+
+FetchContent_Declare(
+        googletest
+        URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+
 FetchContent_MakeAvailable(tomlplusplus)
+FetchContent_MakeAvailable(Eigen3)
+FetchContent_MakeAvailable(googletest)
 
 
 add_executable(guidance_sim_cpp
@@ -21,6 +35,9 @@ add_executable(guidance_sim_cpp
         maths.cpp
         data_import.cpp
         linear_guidance.cpp
+        data_export.cpp
+        data.h
+        variable_types.h
 )
 
 add_custom_command(
@@ -42,6 +59,7 @@ target_link_libraries(
         guidance_sim_cpp
         PRIVATE
         tomlplusplus::tomlplusplus
+        Eigen3::Eigen
 )
 
 
