@@ -48,6 +48,8 @@ add_executable(guidance_sim_cpp
         TrueState.h
         GuidanceValues.cpp
         GuidanceValues.h
+        IMU.cpp
+        IMU.h
 )
 
 add_custom_command(

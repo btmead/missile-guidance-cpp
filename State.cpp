@@ -5,6 +5,7 @@
 #include "maths.h"
 #include "State.h"
 #include "TrueState.h"
+#include "IMU.h"
 #include <Eigen/Dense>
 
 using namespace Eigen;
@@ -17,8 +18,8 @@ State::State (const Vector2d& pos, const Vector2d& vel, const Vector2d& acc, dou
 }
 
 void State::coord_rotation(double angle) {
-    m_pos = (rotation_matrix(angle) * m_pos);
-    m_vel = (rotation_matrix(angle) * m_vel);
+    m_pos = rotation_matrix(angle) * m_pos;
+    m_vel = rotation_matrix(angle) * m_vel;
 }
 
 
@@ -40,6 +41,21 @@ Vector2d State::get_vel() const {
     return m_vel;
 }
 
-double State::omega() {  //NEEDS FIXING
-    return m_acc.y() / m_vel.y();
+Vector2d State::get_accel () {
+    return m_acc;
+}
+
+void State::update_state(IMU& IMU, const double h) {
+    m_pos += h * m_vel + 0.5 * std::pow(h,2) * m_acc;
+    m_vel += h * m_acc;
+    m_acc = IMU.get_acc();
+    m_gamma += h * IMU.get_omega();
+}
+
+void State::update_state(const Vector2d & pos, const double h) {
+    Vector2d vel {(pos - m_pos) / h};
+    m_pos = pos;
+    m_acc = (vel - m_vel) / h;
+    m_vel = vel;
+    m_gamma = m_acc.y() / m_vel.norm();
 }

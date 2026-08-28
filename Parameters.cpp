@@ -59,4 +59,17 @@ double Parameters::get_vmax(const std::string_view type) const {
     throw std::runtime_error("Invalid argument");
 }
 
+double Parameters::get_amax(const std::string_view type) const {
+    if (type == "missile") {
+        return m_missile_amax;
+    }
+    if (type == "target") {
+        return m_target_amax;
+    }
+    throw std::runtime_error("Invalid argument");
+}
+
+double Parameters::get_nav_ratio() const {
+    return m_nav_ratio;
+}
 

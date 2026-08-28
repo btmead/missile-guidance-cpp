@@ -23,13 +23,9 @@ public:
     double get_h () const;
     double get_vmax (const std::string_view) const;
     double get_amax (const std::string_view) const;
+    double get_nav_ratio () const;
 };
 
-struct Result_Sample {
-    double time;
-    Eigen::Vector2d state;
-    double acceleration;
-    double t_go;
-};
+
 
 #endif //GUIDANCE_SIM_CPP_VARIABLE_TYPES_H

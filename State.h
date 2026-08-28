@@ -6,6 +6,7 @@
 #define GUIDANCE_SIM_CPP_STATE_H
 
 #include "TrueState.h"
+#include "IMU.h"
 #include <Eigen/Dense>
 
 using namespace Eigen;
@@ -25,8 +26,9 @@ public:
     Vector2d get_target (const TrueState&) const;
     Vector2d get_pos () const;
     Vector2d get_vel () const;
-    double omega ();
-
+    Vector2d get_accel ();
+    void update_state (IMU&, const double);
+    void update_state (const Vector2d &, const double);
 };
 
 

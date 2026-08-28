@@ -3,6 +3,7 @@
 //
 
 #include "data.h"
+#include "main.h"
 #include <iostream>
 #include <fstream>
 #include <iterator>
