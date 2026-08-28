@@ -7,6 +7,7 @@
 #include <string_view>
 #include <ostream>
 #include <Eigen/Dense>
+#include "State.h"
 
 
 
@@ -14,10 +15,11 @@ Eigen::Vector2d state_derivative (const Eigen::Vector2d&, const double, const do
 
 Eigen::Vector2d rk4_derivative (const Eigen::Vector2d&, const double, const double, const double);
 
+Eigen::Vector2d target_accel (const double, const double);
+
 struct Result_Sample {
     double time;
-    Eigen::Vector2d state;
-    double acceleration;
+    State state;
     double t_go;
 };
 #endif //GUIDANCE_SIM_CPP_MAIN_H

@@ -66,9 +66,9 @@ void write_data (const std::vector<Result_Sample>& results) {
     for (const Result_Sample &result : results) {
         output_file
         << result.time << ", "
-        << result.state.x() << ", "
-        << result.state.y() << ", "
-        << result.acceleration << ", "
+        << result.state.get_pos() << ", "
+        << result.state.get_vel() << ", "
+        << result.state.get_accel() << ", "
         << result.t_go << "\n";
     }
 

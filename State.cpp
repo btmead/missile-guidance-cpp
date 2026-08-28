@@ -23,9 +23,8 @@ void State::coord_rotation(double angle) {
 }
 
 
-Vector2d State::target_pos_N(const TrueState & state) const{
-
-    Vector2d relative_pos_N {rotation_matrix(state.missile_angle()) * state.get_rel_pos()};
+Vector2d State::target_pos_N(const TrueState & tstate) const{
+    Vector2d relative_pos_N {rotation_matrix(tstate.missile_angle()) * tstate.get_rel_pos()};
     return relative_pos_N;
 }
 
@@ -41,7 +40,7 @@ Vector2d State::get_vel() const {
     return m_vel;
 }
 
-Vector2d State::get_accel () {
+Vector2d State::get_accel () const {
     return m_acc;
 }
 

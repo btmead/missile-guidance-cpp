@@ -4,6 +4,7 @@
 
 #include "TrueState.h"
 #include <Eigen/Dense>
+#include "maths.h"
 
 using namespace Eigen;
 
@@ -83,5 +84,22 @@ State TrueState::true_missile_state() const{
 State TrueState::true_target_state() const{
     State state (m_tpos, m_tvel, m_tacc, m_tgamma);
     return state;
+}
+
+void TrueState::update_state(Vector2d & a_c , const Parameters & params, const Vector2d & target_accel) {
+    double h {params.get_h()};
+    double tau {params.get_tau()};
+
+    a_c = rotation_matrix(m_mgamma) * a_c;
+    Vector2d a_dot {(a_c - m_macc) / tau};
+    m_macc = h * a_dot;
+    m_mpos += h * m_mvel + 0.5 * std::pow(h,2) * m_macc;
+    m_mvel += h * m_macc;
+    m_mgamma += h * ((m_macc.x() * m_mvel.y() - m_macc.y() * m_mvel.x()) / m_mvel.norm());
+
+    m_tacc = target_accel;
+    m_tpos += h * m_mvel + 0.5 * std::pow(h,2) * m_tacc;
+    m_tvel += h * m_tacc;
+    m_tgamma += h * ((m_tacc.x() * m_tvel.y() - m_tacc.y() * m_tvel.x()) / m_tvel.norm());
 }
 

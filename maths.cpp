@@ -13,8 +13,8 @@ Matrix2d rotationmatrix(const double angle) {
     double cosine {std::cos(angle)};
     double sine {std::sin(angle)};
 
-    Matrix2d m {{cosine, sine},
-                    {-sine, cosine}};
+    Matrix2d m {{cosine, -sine},
+                    {sine, cosine}};
     return  m;
 }
 

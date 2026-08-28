@@ -29,6 +29,7 @@ public:
     double missile_angle () const;
     State true_missile_state () const;
     State true_target_state () const;
+    void update_state (Vector2d &, const Parameters &, const Vector2d &);
 };
 
 

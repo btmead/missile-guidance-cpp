@@ -39,7 +39,6 @@ add_executable(guidance_sim_cpp
         guidance.h
         data_export.cpp
         data.h
-        variable_types.cpp
         State.cpp
         State.h
         Parameters.cpp
@@ -50,6 +49,7 @@ add_executable(guidance_sim_cpp
         GuidanceValues.h
         IMU.cpp
         IMU.h
+        target.cpp
 )
 
 add_custom_command(

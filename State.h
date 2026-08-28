@@ -26,7 +26,7 @@ public:
     Vector2d get_target (const TrueState&) const;
     Vector2d get_pos () const;
     Vector2d get_vel () const;
-    Vector2d get_accel ();
+    Vector2d get_accel () const;
     void update_state (IMU&, const double);
     void update_state (const Vector2d &, const double);
 };

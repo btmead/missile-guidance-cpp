@@ -28,12 +28,16 @@ Parameters::Parameters (const std::string_view name) {
         const auto h =
             parameters["parameters"]["h"].value<double>();
 
+        const auto tau =
+            parameters["parameters"]["h"].value<double>();
+
         m_nav_ratio = nav_ratio.value();
         m_missile_vmax = missile_vmax.value();
         m_target_vmax = target_vmax.value();
         m_missile_amax = missile_amax.value();
         m_target_amax = target_amax.value();
         m_h = h.value();
+        m_tau = tau.value();
     }
     catch (const toml::parse_error& error) {
         std::cerr << "Could not parse " << name << " file: " << error << std::endl;
@@ -71,5 +75,9 @@ double Parameters::get_amax(const std::string_view type) const {
 
 double Parameters::get_nav_ratio() const {
     return m_nav_ratio;
+}
+
+double Parameters::get_tau() const {
+    return m_tau;
 }
 

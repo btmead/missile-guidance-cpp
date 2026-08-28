@@ -6,11 +6,7 @@
 #define GUIDANCE_SIM_CPP_DATA_H
 
 #include <string_view>
-#include "variable_types.h"
-
-Parameters get_parameters(std::string_view);
-
-State import_state(std::string_view, std::string_view, const double);
+#include "main.h"
 
 std::string get_name(std::string_view);
 
