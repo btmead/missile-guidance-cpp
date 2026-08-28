@@ -7,24 +7,15 @@
 #include <string_view>
 #include <ostream>
 #include <Eigen/Dense>
-#include "variable_types.h"
 
 
-void coord_rotation(State&, State&);
-
-State coord_rotation(State&, const double);
 
 double v_closing (const State&, const State&);
-
-Eigen::Matrix2d rotationmatrix(const double);
-
-Eigen::Matrix2d get_propnav (const double, const double);
 
 Eigen::Vector2d state_derivative (const Eigen::Vector2d&, const double, const double);
 
 Eigen::Vector2d rk4_derivative (const Eigen::Vector2d&, const double, const double, const double);
 
-Eigen::Vector2d to_linear (const State&, const State&);
 
 std::ostream& operator << (std::ostream&, State);
 

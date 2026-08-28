@@ -3,6 +3,7 @@
 //
 
 #include "main.h"
+#include "State.h"
 #include <cmath>
 #include <iostream>
 #include <Eigen/Dense>
@@ -15,30 +16,13 @@ Matrix2d get_propnav (const double t_go, const double nav_ratio) {
         {-nav_ratio / std::pow(t_go, 2),    -nav_ratio / t_go}};
 }
 
-Vector2d to_linear (const State& mstate, const State& tstate) {
-    double y { tstate.pos.y() - mstate.pos.y() };
-    double yd { tstate.vel.y() - mstate.vel.y() };
-    return {y, yd};
-}
-
-double v_closing (const State &mstate, const State &tstate) {
-    Vector2d v_rel { mstate.vel - tstate.vel };
-    Vector2d r { tstate.pos - mstate.pos };
-
-    double v_closing { (r.dot(v_rel) / r.squaredNorm()) };
-
-    if (v_closing < 0) {
-        throw std::invalid_argument("Closing velocity less than 0");
-    }
-
-    return v_closing;
-}
 
 Vector2d state_derivative (const Vector2d& state, const double nr, const double t_go) {
     Matrix2d propnav_matrix { get_propnav( t_go, nr )};
     return propnav_matrix * state;
 }
 
+#if 0
 std::vector<Result_Sample> linear_guidance (const State &mstate, const State& tstate, const Parameters& params, const double t_final) {
     double t {0.0};
     Vector2d state { to_linear( mstate, tstate ) };
@@ -76,3 +60,4 @@ std::vector<Result_Sample> linear_guidance (const State &mstate, const State& ts
 
 
 }
+#endif

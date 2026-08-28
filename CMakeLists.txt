@@ -33,11 +33,21 @@ add_executable(guidance_sim_cpp
         main.cpp
         main.h
         maths.cpp
+        maths.h
         data_import.cpp
-        linear_guidance.cpp
+        guidance.cpp
+        guidance.h
         data_export.cpp
         data.h
-        variable_types.h
+        variable_types.cpp
+        State.cpp
+        State.h
+        Parameters.cpp
+        Parameters.h
+        TrueState.cpp
+        TrueState.h
+        GuidanceValues.cpp
+        GuidanceValues.h
 )
 
 add_custom_command(
