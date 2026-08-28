@@ -21,6 +21,7 @@ public:
     double r_dot ();
     double dot_lambda ();
     double t_final ();
+    void update_values(const State& missile, const State &target);
 };
 
 

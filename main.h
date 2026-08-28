@@ -4,10 +4,9 @@
 
 #ifndef GUIDANCE_SIM_CPP_MAIN_H
 #define GUIDANCE_SIM_CPP_MAIN_H
-#include <string_view>
-#include <ostream>
 #include <Eigen/Dense>
 #include "State.h"
+#include "TrueState.h"
 
 
 
@@ -19,7 +18,8 @@ Eigen::Vector2d target_accel (const double, const double);
 
 struct Result_Sample {
     double time;
-    State state;
+    State mstate;
+    TrueState truestate;
     double t_go;
 };
 #endif //GUIDANCE_SIM_CPP_MAIN_H

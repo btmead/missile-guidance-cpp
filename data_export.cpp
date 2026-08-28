@@ -6,7 +6,6 @@
 #include "main.h"
 #include <iostream>
 #include <fstream>
-#include <iterator>
 #include <chrono>
 #include <ctime>
 #include <iomanip>
@@ -56,19 +55,52 @@ void write_data (const std::vector<Result_Sample>& results) {
 
     output_file
     << "time (s), "
-    << "lateral displacement (m), "
-    << "lateral velocity (m/s), "
-    << "lateral acceleration (m/s^2), "
+    << "estimated missile position x (m), "
+    << "estimated missile position y (m), "
+    << "estimated missile velocity x (m/s), "
+    << "estimated missile velocity y (m/s), "
+    << "estimated missile acceleration x (m/s^2), "
+    << "estimated missile acceleration y (m/s^2), "
+    << "true missile position x (m), "
+    << "true missile position y (m), "
+    << "true missile velocity x (m/s), "
+    << "true missile velocity y (m/s), "
+    << "true missile acceleration x (m/s^2), "
+    << "true missile acceleration y (m/s^2), "
+    << "true target position x (m), "
+    << "true target position y (m), "
+    << "true target velocity x (m/s), "
+    << "true target velocity y (m/s), "
+    << "true target acceleration x (m/s^2), "
+    << "true target acceleration y (m/s^2), "
     << "time_to_go (s) \n";
 
     output_file << std::setprecision(17);
 
     for (const Result_Sample &result : results) {
+        State true_missile {result.truestate.true_missile_state()};
+        State true_target {result.truestate.true_target_state()};
+
         output_file
         << result.time << ", "
-        << result.state.get_pos() << ", "
-        << result.state.get_vel() << ", "
-        << result.state.get_accel() << ", "
+        << result.mstate.get_pos().x() << ", "
+        << result.mstate.get_pos().y() << ", "
+        << result.mstate.get_vel().x() << ", "
+        << result.mstate.get_vel().y() << ", "
+        << result.mstate.get_accel().x() << ", "
+        << result.mstate.get_accel().y() << ", "
+        << true_missile.get_pos().x() << ", "
+        << true_missile.get_pos().y() << ", "
+        << true_missile.get_vel().x() << ", "
+        << true_missile.get_vel().y() << ", "
+        << true_missile.get_accel().x() << ", "
+        << true_missile.get_accel().y() << ", "
+        << true_target.get_pos().x() << ", "
+        << true_target.get_pos().y() << ", "
+        << true_target.get_vel().x() << ", "
+        << true_target.get_vel().y() << ", "
+        << true_target.get_accel().x() << ", "
+        << true_target.get_accel().y() << ", "
         << result.t_go << "\n";
     }
 

@@ -5,9 +5,10 @@
 #ifndef GUIDANCE_SIM_CPP_STATE_H
 #define GUIDANCE_SIM_CPP_STATE_H
 
-#include "TrueState.h"
-#include "IMU.h"
 #include <Eigen/Dense>
+
+class TrueState;
+class IMU;
 
 using namespace Eigen;
 

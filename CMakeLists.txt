@@ -35,8 +35,6 @@ add_executable(guidance_sim_cpp
         maths.cpp
         maths.h
         data_import.cpp
-        guidance.cpp
-        guidance.h
         data_export.cpp
         data.h
         State.cpp
@@ -64,7 +62,7 @@ add_custom_command(
 target_compile_features(
         guidance_sim_cpp
         PRIVATE
-        cxx_std_17
+        cxx_std_20
 )
 
 target_link_libraries(

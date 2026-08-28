@@ -10,13 +10,14 @@ target_vmax = 700
 missile_amax = 30
 target_amax = 7
 h = 0.01
+tau = 1
 
-[missile_state]
+[missile]
 x = 0
 y = 0
 theta = 30
 
-[target_state]
+[target]
 x = 8000
 y = 4000
 theta = 46

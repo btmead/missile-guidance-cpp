@@ -29,7 +29,7 @@ Parameters::Parameters (const std::string_view name) {
             parameters["parameters"]["h"].value<double>();
 
         const auto tau =
-            parameters["parameters"]["h"].value<double>();
+            parameters["parameters"]["tau"].value<double>();
 
         m_nav_ratio = nav_ratio.value();
         m_missile_vmax = missile_vmax.value();

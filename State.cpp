@@ -24,7 +24,7 @@ void State::coord_rotation(double angle) {
 
 
 Vector2d State::target_pos_N(const TrueState & tstate) const{
-    Vector2d relative_pos_N {rotation_matrix(tstate.missile_angle()) * tstate.get_rel_pos()};
+    Vector2d relative_pos_N {rotation_matrix(-tstate.missile_angle()) * tstate.get_rel_pos()};
     return relative_pos_N;
 }
 
@@ -56,5 +56,5 @@ void State::update_state(const Vector2d & pos, const double h) {
     m_pos = pos;
     m_acc = (vel - m_vel) / h;
     m_vel = vel;
-    m_gamma = m_acc.y() / m_vel.norm();
+    m_gamma += h * (m_acc.y() / m_vel.norm());
 }

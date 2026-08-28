@@ -6,8 +6,10 @@
 #define GUIDANCE_SIM_CPP_TRUESTATE_H
 
 #include <Eigen/Dense>
-#include "Parameters.h"
-#include "State.h"
+#include <string_view>
+
+class State;
+class Parameters;
 
 using namespace Eigen;
 
@@ -24,11 +26,13 @@ private:
     double m_tgamma;
 
 public:
-    TrueState(const std::string_view, const Parameters &);
+    TrueState(std::string_view, const Parameters &);
     Vector2d get_rel_pos() const;
     double missile_angle () const;
     State true_missile_state () const;
     State true_target_state () const;
+    Vector2d get_m_accel() const;
+    Vector2d get_m_vel() const;
     void update_state (Vector2d &, const Parameters &, const Vector2d &);
 };
 

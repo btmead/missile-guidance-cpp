@@ -7,6 +7,9 @@
 
 #include <Eigen/Dense>
 
+class TrueState;
+class Parameters;
+
 using namespace Eigen;
 
 class IMU {
@@ -17,7 +20,7 @@ public:
     IMU ();
     Vector2d get_acc();
     double get_omega();
-    void update_values (const Vector2d &, const Vector2d &, const double);
+    void update_values (const TrueState &, const Vector2d &, const Parameters&);
 };
 
 

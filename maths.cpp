@@ -9,7 +9,7 @@
 using namespace Eigen;
 
 
-Matrix2d rotationmatrix(const double angle) {
+Matrix2d rotation_matrix(const double angle) {
     double cosine {std::cos(angle)};
     double sine {std::sin(angle)};
 

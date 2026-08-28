@@ -19,7 +19,7 @@ GuidanceValues::GuidanceValues(const State & missile, const State & target) {
 }
 
 double GuidanceValues::r_dot() {
-    return m_v.dot(m_r) / m_r.squaredNorm();
+    return m_v.dot(m_r) / m_r.norm();
 }
 
 double GuidanceValues::dot_lambda() {
@@ -27,5 +27,10 @@ double GuidanceValues::dot_lambda() {
 }
 
 double GuidanceValues::t_final() {
-    return m_v.dot(m_r) / m_r.norm();
+    return -1 / (m_v.dot(m_r) / m_r.squaredNorm());
+}
+
+void GuidanceValues::update_values(const State &missile, const State &target) {
+    m_r = target.get_pos() - missile.get_pos();
+    m_v = target.get_vel() - missile.get_vel();
 }
