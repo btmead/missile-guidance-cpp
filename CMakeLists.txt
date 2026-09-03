@@ -59,6 +59,12 @@ add_custom_command(
         "$<TARGET_FILE_DIR:guidance_sim_cpp>/parameters.toml"
 )
 
+configure_file(
+        "parameters.toml"
+        "cmake-build-debug/parameters.toml"
+        COPYONLY
+)
+
 target_compile_features(
         guidance_sim_cpp
         PRIVATE

@@ -39,6 +39,7 @@ TrueState::TrueState(const std::string_view file, const Parameters& params) {
             throw std::runtime_error{"Incorrect missile initial position. Should be (0,0)"};
         }
 
+        //Angles are given in degrees, need to convert to radians
         mangle = mangle.value() * (std::numbers::pi_v<double> / 180);
         tangle = tangle.value() * (std::numbers::pi_v<double> / 180);
 
@@ -102,16 +103,19 @@ void TrueState::update_state(Vector2d & a_c , const Parameters & params, const V
     double h {params.get_h()};
     double tau {params.get_tau()};
 
-    a_c = rotation_matrix(m_mgamma) * a_c;
-    Vector2d a_dot {(a_c - m_macc) / tau};
-    m_mpos += h * m_mvel + 0.5 * std::pow(h,2) * m_macc;
-    m_mvel += h * m_macc;
-    m_mgamma += h * ((m_macc.y() * m_mvel.x() - m_macc.x() * m_mvel.y()) / m_mvel.squaredNorm());
+    /* Update position, velocity and gamma before acceleration so that the state
+     * is correct for the integration over the next time step.
+     */
+    a_c = rotation_matrix(-m_mgamma) * a_c;
+    Vector2d a_dot {(a_c - m_macc) / tau}; 
     m_macc += h * a_dot;
+    m_mvel += h * m_macc;
+    m_mpos += h * m_mvel + 0.5 * std::pow(h,2) * m_macc;
+    m_mgamma += h * ((m_macc.y() * m_mvel.x() - m_macc.x() * m_mvel.y()) / m_mvel.squaredNorm()); //Check for 0 division
 
-    m_tpos += h * m_tvel + 0.5 * std::pow(h,2) * m_tacc;
-    m_tvel += h * m_tacc;
-    m_tgamma += h * ((m_tacc.x() * m_tvel.y() - m_tacc.y() * m_tvel.x()) / m_tvel.squaredNorm());
     m_tacc = target_accel;
+    m_tvel += h * m_tacc;
+    m_tpos += h * m_tvel + 0.5 * std::pow(h,2) * m_tacc;
+    m_tgamma += h * ((m_tacc.x() * m_tvel.y() - m_tacc.y() * m_tvel.x()) / m_tvel.squaredNorm()); //Check for 0 division
 }
 

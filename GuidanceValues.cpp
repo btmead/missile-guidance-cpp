@@ -9,8 +9,7 @@
 using namespace Eigen;
 
 GuidanceValues::GuidanceValues() {
-    m_r = {0.0, 0.0};
-    m_v = {0.0, 0.0};
+    throw std::runtime_error("Cannot have 0 values for division by r");
 }
 
 GuidanceValues::GuidanceValues(const State & missile, const State & target) {
@@ -30,7 +29,12 @@ double GuidanceValues::t_final() {
     return -1 / (m_v.dot(m_r) / m_r.squaredNorm());
 }
 
+Vector2d GuidanceValues::v_rel() {
+    return m_v;
+}
+
 void GuidanceValues::update_values(const State &missile, const State &target) {
+    //Add checks that r is not 0 and that closing velocity is not negative
     m_r = target.get_pos() - missile.get_pos();
     m_v = target.get_vel() - missile.get_vel();
 }
