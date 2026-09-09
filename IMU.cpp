@@ -23,7 +23,7 @@ double IMU::get_omega() {
 
 void IMU::update_values(const TrueState & state, const Vector2d & a_c, const Parameters& p) {
     double angle {state.missile_angle()};
-    Vector2d acc { rotation_matrix(angle) * state.get_m_accel() };
+    Vector2d acc { rotation_matrix(-angle) * state.get_m_accel() };
     Vector2d vel {state.get_m_vel()};
 
     Vector2d a_dot {(a_c - acc) / p.get_tau()};

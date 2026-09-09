@@ -12,26 +12,26 @@ def load_results(name):
 def minmax (values):
     minmax = {}
     minmax["x1min"] = values.estimated_missile_position_x.min()
-    minmax["x1max"] = values.estimated_missile_position_x.max()
+    minmax["x1max"] = values.true_target_position_x.max()
     minmax["y1min"] = values.estimated_missile_position_y.min()
-    minmax["y1max"] = values.estimated_missile_position_y.max()
-    minmax["x2min"] = values.estimate_missile_acceleration_x.min()
-    minmax["x2max"] = values.estimate_missile_acceleration_x.max()
-    minmax["y2min"] = values.estimate_missile_acceleration_y.min()
-    minmax["y2max"] = values.estimate_missile_acceleration_y.max()
+    minmax["y1max"] = values.true_target_position_y.max()
+    minmax["x2min"] = values.estimated_missile_acceleration_x.min()
+    minmax["x2max"] = values.estimated_missile_acceleration_x.max()
+    minmax["y2min"] = values.estimated_missile_acceleration_y.min()
+    minmax["y2max"] = values.estimated_missile_acceleration_y.max()
 
     return minmax
 
 def create_plot(values):
     min_max = minmax(values)
 
-    fig, (ax1, ax2) = plt.subplots(1, 2)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 10))
     missile_line, = ax1.plot([], [], "red", label="Missile trajectory")
     missile_point, = ax1.plot([], [], "ro")
     target_line, = ax1.plot([], [], "blue", label="Target trajectory")
     target_point, = ax1.plot([], [], "bo")
-    missile_acceleration = ax2.plot([], [], "red", label="Missile acceleration")
-    target_acceleration = ax2.plot([], [], "blue", label="Target acceleration")
+    missile_acceleration, = ax2.plot([], [], "red", label="Missile acceleration")
+    target_acceleration, = ax2.plot([], [], "blue", label="Target acceleration")
 
     ax1.set_xlim(min_max["x1min"], min_max["x1max"])
     ax1.set_ylim(min_max["y1min"], min_max["y1max"])
@@ -42,29 +42,32 @@ def create_plot(values):
     
     ax2.set_xlim(min_max["x2min"], min_max["x2max"])
     ax2.set_ylim(min_max["y2min"], min_max["y2max"])
-    ax2.set(xlabel="Time (s)", ylabel="Acceleration (m/s^2)")
+    ax2.set(xlabel="Acceleration x (m/s^2)", ylabel="Acceleration y (m/s^2)")
     ax2.grid(True, alpha=0.3)
     ax2.legend(loc="upper right")
 
-    return fig, missile_line, missile_point, target_line, target_point
-
+    return fig, missile_line, missile_point, target_line, target_point, missile_acceleration, target_acceleration
 
 def create_position_updater(
         values,
         missile_line,
         missile_point,
         target_line,
-        target_point):
+        target_point,
+        missile_acceleration,
+        target_acceleration):
     def update_positions(time):
         xm = values["estimated_missile_position_x"].iloc[:time + 1]
         ym = values["estimated_missile_position_y"].iloc[:time + 1]
         xt = values["true_target_position_x"].iloc[:time + 1]
         yt = values["true_target_position_y"].iloc[:time + 1]
-        am = values["estimated_missile_acceleration_y"].iloc[:time + 1]
+        amx = values["estimated_missile_acceleration_x"].iloc[:time + 1]
+        amy = values["estimated_missile_acceleration_y"].iloc[:time + 1]
         missile_line.set_data(xm, ym)
         missile_point.set_data([xm.iloc[-1]], [ym.iloc[-1]])
         target_line.set_data(xt, yt)
         target_point.set_data([xt.iloc[-1]], [yt.iloc[-1]])
+        missile_acceleration.set_data(amx, amy)
         return (missile_line, missile_point, target_line, target_point)
 
     return update_positions
@@ -82,13 +85,15 @@ def save_animation(animation, name):
 
 def main(name) -> int:
     values = load_results(name)
-    fig, missile_line, missile_point, target_line, target_point = create_plot(values)
+    fig, missile_line, missile_point, target_line, target_point, missile_acceleration, target_acceleration = create_plot(values)
     update_positions = create_position_updater(
         values,
         missile_line,
         missile_point,
         target_line,
         target_point,
+        missile_acceleration,
+        target_acceleration
     )
 
     animation = FuncAnimation(

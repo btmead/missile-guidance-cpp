@@ -106,7 +106,7 @@ void TrueState::update_state(Vector2d & a_c , const Parameters & params, const V
     /* Update position, velocity and gamma before acceleration so that the state
      * is correct for the integration over the next time step.
      */
-    a_c = rotation_matrix(-m_mgamma) * a_c;
+    a_c = rotation_matrix(m_mgamma) * a_c;
     Vector2d a_dot {(a_c - m_macc) / tau}; 
     m_macc += h * a_dot;
     m_mvel += h * m_macc;
