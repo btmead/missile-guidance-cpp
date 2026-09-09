@@ -3,3 +3,4 @@ AGENTS.md
 /.idea/
 /Plots/
 /Results/
+__pycache__
