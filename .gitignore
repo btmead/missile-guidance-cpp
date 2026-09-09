@@ -4,3 +4,4 @@ AGENTS.md
 /.venv/
 /Results/
 /.idea/
+__pycache__
