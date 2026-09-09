@@ -63,12 +63,15 @@ def create_position_updater(
         yt = values["true_target_position_y"].iloc[:time + 1]
         amx = values["estimated_missile_acceleration_x"].iloc[:time + 1]
         amy = values["estimated_missile_acceleration_y"].iloc[:time + 1]
+        tmx = values["true_target_acceleration_x"].iloc[:time + 1]
+        tmy = values["true_target_acceleration_y"].iloc[:time + 1]
         missile_line.set_data(xm, ym)
         missile_point.set_data([xm.iloc[-1]], [ym.iloc[-1]])
         target_line.set_data(xt, yt)
         target_point.set_data([xt.iloc[-1]], [yt.iloc[-1]])
         missile_acceleration.set_data(amx, amy)
-        return (missile_line, missile_point, target_line, target_point)
+        target_acceleration.set_data(tmx, tmy)
+        return (missile_line, missile_point, target_line, target_point, missile_acceleration, target_acceleration)
 
     return update_positions
 
