@@ -38,12 +38,14 @@ namespace {
     };
 } //namespace
 
-void write_data (const std::vector<Result_Sample>& results) {
+std::string write_data (const std::vector<Result_Sample>& results) {
     const std::filesystem::path output_directory{"Results"};
     std::filesystem::create_directories(output_directory);
 
-    const std:: string filename = get_name("parameters.toml");
+    const std::string filename = get_name("parameters.toml");
+    const std::string temp_output_name {filename + "-" + make_timestamp()};
     const std::string output_name {filename + "-" + make_timestamp() + ".csv"};
+
 
     const std::filesystem::path file_path {output_directory / output_name};
     std::ofstream output_file (file_path);
@@ -54,26 +56,26 @@ void write_data (const std::vector<Result_Sample>& results) {
     }
 
     output_file
-    << "time (s), "
-    << "estimated missile position x (m), "
-    << "estimated missile position y (m), "
-    << "estimated missile velocity x (m/s), "
-    << "estimated missile velocity y (m/s), "
-    << "estimated missile acceleration x (m/s^2), "
-    << "estimated missile acceleration y (m/s^2), "
-    << "true missile position x (m), "
-    << "true missile position y (m), "
-    << "true missile velocity x (m/s), "
-    << "true missile velocity y (m/s), "
-    << "true missile acceleration x (m/s^2), "
-    << "true missile acceleration y (m/s^2), "
-    << "true target position x (m), "
-    << "true target position y (m), "
-    << "true target velocity x (m/s), "
-    << "true target velocity y (m/s), "
-    << "true target acceleration x (m/s^2), "
-    << "true target acceleration y (m/s^2), "
-    << "time_to_go (s) \n";
+    << "time,"
+    << "estimated_missile_position_x,"
+    << "estimated_missile_position_y,"
+    << "estimated_missile_velocity_x,"
+    << "estimated_missile_velocity_y,"
+    << "estimated_missile_acceleration_x,"
+    << "estimated_missile_acceleration_y,"
+    << "true_missile_position_x,"
+    << "true_missile_position_y,"
+    << "true_missile_velocity_x,"
+    << "true_missile_velocity_y,"
+    << "true_missile_acceleration_x,"
+    << "true_missile_acceleration_y,"
+    << "true_target_position_x,"
+    << "true_target_position_y,"
+    << "true_target_velocity_x,"
+    << "true_target_velocity_y,"
+    << "true_target_acceleration_x,"
+    << "true_target_acceleration_y,"
+    << "time_to_go\n";
 
     output_file << std::setprecision(17);
 
@@ -110,5 +112,7 @@ void write_data (const std::vector<Result_Sample>& results) {
             file_path.string()
         };
     }
+
+    return temp_output_name;
 }
 

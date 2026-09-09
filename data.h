@@ -10,6 +10,6 @@
 
 std::string get_name(std::string_view);
 
-void write_data(const std::vector<Result_Sample>&);
+std::string write_data(const std::vector<Result_Sample>&);
 
 #endif //GUIDANCE_SIM_CPP_DATA_H

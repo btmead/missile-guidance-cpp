@@ -1,6 +1,13 @@
 AGENTS.md
 /Codex/
+<<<<<<< HEAD
 /.idea/
 /Plots/
 /Results/
+=======
+/Plots/
+/.venv/
+/Results/
+/.idea/
+>>>>>>> e1965d28faac08b289965bf7bbbd1eb565cb53fb
 __pycache__
