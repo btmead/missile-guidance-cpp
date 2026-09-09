@@ -48,6 +48,7 @@ add_executable(guidance_sim_cpp
         IMU.cpp
         IMU.h
         target.cpp
+        plotting.cpp
 )
 
 add_custom_command(

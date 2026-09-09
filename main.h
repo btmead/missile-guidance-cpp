@@ -22,4 +22,7 @@ struct Result_Sample {
     TrueState truestate;
     double t_go;
 };
+
+void plotting(std::string);
+
 #endif //GUIDANCE_SIM_CPP_MAIN_H

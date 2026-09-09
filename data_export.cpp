@@ -38,12 +38,14 @@ namespace {
     };
 } //namespace
 
-void write_data (const std::vector<Result_Sample>& results) {
+std::string write_data (const std::vector<Result_Sample>& results) {
     const std::filesystem::path output_directory{"Results"};
     std::filesystem::create_directories(output_directory);
 
-    const std:: string filename = get_name("parameters.toml");
+    const std::string filename = get_name("parameters.toml");
+    const std::string temp_output_name {filename + "-" + make_timestamp()};
     const std::string output_name {filename + "-" + make_timestamp() + ".csv"};
+
 
     const std::filesystem::path file_path {output_directory / output_name};
     std::ofstream output_file (file_path);
@@ -110,5 +112,7 @@ void write_data (const std::vector<Result_Sample>& results) {
             file_path.string()
         };
     }
+
+    return temp_output_name;
 }
 
