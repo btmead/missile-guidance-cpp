@@ -1,14 +1,14 @@
 title = "parameters"
 
 [metadata]
-parameter_ID = "P003 R01"
+parameter_ID = "P003 R02"
 
 [parameters]
 nav_ratio = 3
 missile_vmax = 1000
 target_vmax = 700
-missile_amax = 30
-target_amax = 7
+missile_amax = 300
+target_amax = 70
 h = 0.01
 tau = 0.2
 
