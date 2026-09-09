@@ -47,7 +47,7 @@ Vector2d State::get_accel () const {
 }
 
 void State::update_state(IMU& IMU, const double h) {
-    Vector2d acc {rotation_matrix(-m_gamma) * IMU.get_acc()};
+    Vector2d acc {rotation_matrix(m_gamma) * IMU.get_acc()};
     m_acc = acc;
     m_vel += h * m_acc;
     m_pos += h * m_vel + 0.5 * std::pow(h,2) * m_acc;
@@ -55,7 +55,7 @@ void State::update_state(IMU& IMU, const double h) {
 }
 
 void State::update_state(const Vector2d & pos, const double h, const Vector2d & v_rel) {
-    Vector2d vel {((pos - m_pos) / h) - v_rel};
+    Vector2d vel {((pos - m_pos) / h)};
     m_pos = pos;
     m_acc = (vel - m_vel) / h;
     m_vel = vel;

@@ -66,6 +66,8 @@ int main() {
             });
     }
 
-    write_data(results);
+    std::string name {write_data(results)};
+    plotting(name);
+
 }
 

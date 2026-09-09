@@ -1,2 +1,7 @@
 AGENTS.md
 /Codex/
+/Plots/
+/.venv/
+/Results/
+/.idea/
+__pycache__

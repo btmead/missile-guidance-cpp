@@ -20,50 +20,52 @@ The intended runtime path:
 5. calculates range rate, line-of-sight rate, and a pure proportional-navigation
    acceleration command;
 6. propagates truth and estimated states at the configured timestep; and
-7. writes timestamped CSV results to the `Results` directory.
+7. writes timestamped CSV results to the `Results` directory; and
+8. launches the Python plotting script to save an animated GIF in `Plots`.
 
 This architecture is under active development. The circular header dependency has
 been removed using forward declarations, both initial headings are converted to
-radians, and CSV export now writes scalar state components. Numerical and
+radians, acceleration vectors are transformed between body and inertial frames,
+and CSV export writes scalar estimated and truth-state components. Numerical and
 validation issues remain under [Known Limitations](#known-limitations), so the
-output must not yet be treated as validated simulation evidence.
+output and animation must not yet be treated as validated simulation evidence.
 
 ## Guidance Model
 
 The relative position and velocity are defined as
-\(\mathbf r=\mathbf p_T-\mathbf p_M\) and
-\(\mathbf v_{rel}=\mathbf v_T-\mathbf v_M\).
+$\mathbf r=\mathbf p_T-\mathbf p_M$ and
+$\mathbf v_{rel}=\mathbf v_T-\mathbf v_M$.
 
-The range rate is \(\dot r=(\mathbf r\cdot\mathbf v_{rel})/\|\mathbf r\|\),
-with closing speed \(V_c=-\dot r\) for an approaching engagement. The Cartesian
+The range rate is $\dot r=(\mathbf r\cdot\mathbf v_{rel})/\|\mathbf r\|$,
+with closing speed $V_c=-\dot r$ for an approaching engagement. The Cartesian
 line-of-sight rate is
-\(\dot\lambda=(r_xv_{rel,y}-r_yv_{rel,x})/\|\mathbf r\|^2\).
+$\dot\lambda=(r_xv_{rel,y}-r_yv_{rel,x})/\|\mathbf r\|^2$.
 
 The intended pure proportional-navigation command is
-\(a_c=N V_c\dot\lambda=-N\dot r\dot\lambda\), applied along the missile body
+$a_c=N V_c\dot\lambda=-N\dot r\dot\lambda$, applied along the missile body
 lateral axis. The command is limited by the configured missile acceleration
 ceiling.
 
 The initial local time-to-go estimate is
-\(t_{go}=\|\mathbf r\|/V_c=-\|\mathbf r\|/\dot r\). This is a local estimate
+$t_{go}=\|\mathbf r\|/V_c=-\|\mathbf r\|/\dot r$. This is a local estimate
 based on current radial closing speed, not a guaranteed intercept time.
 
 ## Coordinate Conventions
 
-- inertial \(x\) points right and inertial \(y\) points up;
-- headings are measured counter-clockwise from inertial positive \(x\);
+- inertial $x$ points right and inertial $y$ points up;
+- headings are measured counter-clockwise from inertial positive $x$;
 - scenario headings are entered in degrees and should be converted to radians on
   import;
 - angles are stored and passed to trigonometric functions in radians;
 - `rotation_matrix(theta)` is the active counter-clockwise matrix
-  \(R(\theta)\);
-- body-to-inertial conversion uses \(R(+\gamma)\);
-- inertial-to-body conversion uses \(R(-\gamma)=R(\gamma)^T\); and
+  $R(\theta)$;
+- body-to-inertial conversion uses $R(+\gamma)$;
+- inertial-to-body conversion uses $R(-\gamma)=R(\gamma)^T$; and
 - positions are translated to the required origin before they are rotated.
 
 For a missile-centred observation, the transformations are
-\(\mathbf r_B=R(-\gamma)(\mathbf p_T-\mathbf p_M)\) and
-\(\mathbf p_T=\mathbf p_M+R(+\gamma)\mathbf r_B\).
+$\mathbf r_B=R(-\gamma)(\mathbf p_T-\mathbf p_M)$ and
+$\mathbf p_T=\mathbf p_M+R(+\gamma)\mathbf r_B$.
 
 ## Dynamics and Measurement Model
 
@@ -72,8 +74,8 @@ and heading used by the simulator. `State` stores the corresponding estimated
 quantities available to the guidance path.
 
 The missile acceleration response is intended to use the first-order lag
-\(\dot{\mathbf a}=(\mathbf a_c-\mathbf a)/\tau\). The discrete implementation
-advances the state at timestep \(h\).
+$\dot{\mathbf a}=(\mathbf a_c-\mathbf a)/\tau$. The discrete implementation
+advances the state at timestep $h$.
 
 `IMU` currently uses truth data to construct body-frame acceleration information.
 The measurement boundary is still being refined; sensor noise, bias, quantisation,
@@ -83,6 +85,7 @@ and independent attitude measurement are not yet modelled.
 
 - CMake 4.2 or newer
 - A C++20-compatible compiler (the code uses `std::numbers::pi_v<double>`)
+- Python 3 with pandas, Matplotlib, and Pillow installed in a project `.venv`
 - Git and an internet connection during initial CMake configuration
 
 CMake currently downloads:
@@ -93,7 +96,8 @@ CMake currently downloads:
 
 Eigen is not pinned to a specific revision, so builds are not yet fully
 reproducible. GoogleTest is downloaded, but automated tests have not yet been
-connected to the CMake target.
+connected to the CMake target. Python dependencies are not yet recorded in a
+locked requirements file.
 
 ## Build
 
@@ -105,6 +109,15 @@ cmake --build build
 ```
 
 After a successful build, CMake copies `parameters.toml` beside the executable.
+
+The current Windows plotting launcher expects the Python interpreter at
+`.venv\Scripts\python.exe`. From the project root, create the environment and
+install the plotting dependencies with:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install pandas matplotlib pillow
+```
 
 ## Configure a Scenario
 
@@ -136,30 +149,34 @@ theta = 46
 
 The intended units are metres, seconds, metres per second, and metres per second
 squared. `theta` is supplied in degrees; all internal angles should use radians.
-The missile is currently required to begin at inertial position \((0,0)\).
+The missile is currently required to begin at inertial position $(0,0)$.
 
 ## Run and Results
 
-Run the executable from the directory containing both the executable and its
-copied `parameters.toml` file.
+Run the executable with the project root as its working directory. The current
+plotting launcher uses project-relative paths for `.venv`, `plotting.py`,
+`Results`, and `Plots`. In CLion, set the run configuration's working directory
+to `$ProjectFileDir$`.
 
 For a single-configuration Windows build:
 
 ```powershell
-Set-Location build
-.\guidance_sim_cpp.exe
+.\build\guidance_sim_cpp.exe
 ```
 
-A successful run creates `Results/<parameter ID>-<UTC timestamp>.csv`. Each data
-row contains:
+A successful run creates `Results/<parameter ID>-<UTC timestamp>.csv` and
+`Plots/<parameter ID>-<UTC timestamp>.gif`. Each CSV row contains:
 
 - time;
-- estimated missile position \(x\) and \(y\);
-- estimated missile velocity \(x\) and \(y\);
-- estimated missile acceleration \(x\) and \(y\); and
-- estimated time-to-go.
+- estimated missile position, velocity, and acceleration $x$ and $y$ components;
+- true missile position, velocity, and acceleration $x$ and $y$ components;
+- true target position, velocity, and acceleration $x$ and $y$ components; and
+- the initial time-to-go estimate followed by its countdown.
 
-Truth state and target-estimate histories are not yet exported.
+The animation currently shows the estimated missile and true target trajectories.
+Its second panel traces estimated missile acceleration $a_y$ against $a_x$.
+Although a target-acceleration artist is created, it is not yet populated by the
+animation update.
 
 ## Project Structure
 
@@ -173,6 +190,8 @@ Truth state and target-estimate histories are not yet exported.
 - `target.cpp` — target manoeuvre command
 - `data_import.cpp` — metadata import
 - `data_export.cpp` — timestamped CSV export
+- `plotting.cpp` — launches the Python plotting process after CSV export
+- `plotting.py` — creates the trajectory and acceleration animation
 - `parameters.toml` — example scenario
 - `CMakeLists.txt` — build configuration and dependencies
 
@@ -234,20 +253,28 @@ inside `#if 0` blocks or commented-out sections.
 ## Known Limitations
 
 - the target heading-rate numerator currently has the opposite sign from
-  \(\dot\gamma=(v_xa_y-v_ya_x)/\|\mathbf v\|^2\);
+  $\dot\gamma=(v_xa_y-v_ya_x)/\|\mathbf v\|^2$;
 - the target finite-difference update needs an explicitly aligned initial sample;
 - truth, measurement, and estimated-state update ordering needs one-step tests to
   confirm that each acceleration belongs to the intended instant;
+- the position update uses velocity after it has already been advanced, so its
+  acceleration contribution needs a one-step integration check;
+- the first updated result is labelled with time zero and the loop advances one
+  step beyond the reserved initial sample;
 - divisions by range, speed, timestep, and time constant need singularity guards;
 - required TOML values are dereferenced before their presence and type are fully
   validated, and positive timestep, time constant, speed, and limits are not yet
   enforced;
 - the exported time-to-go is an initial estimate followed by a countdown rather
   than a value recomputed from the current engagement geometry;
-- truth-versus-estimate data are not yet exported; and
+- the C++ plotting launcher is currently Windows-specific and assumes a project
+  `.venv` exists;
+- the CSV filename and returned plotting name use separate timestamp calls, which
+  could disagree if the UTC second changes between them;
+- target acceleration is currently zero and is not yet animated; and
 - automated geometry, dynamics, import, and CSV tests are still required.
 
-The next dependable milestone is a clean, verified executable run followed by
-unit tests for
-\(R(+\theta)R(-\theta)=I\), norm preservation, known \(90^\circ\) rotations,
-range rate, line-of-sight rate, time-to-go units, and one-step state propagation.
+The next dependable milestone is to add and plot the target-acceleration model,
+then perform a clean executable run and add unit tests for
+$R(+\theta)R(-\theta)=I$, norm preservation, known $90^\circ$ rotations, range
+rate, line-of-sight rate, time-to-go units, and one-step state propagation.
